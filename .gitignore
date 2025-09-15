@@ -1,31 +1,29 @@
-<<<<<<< HEAD
-HELP.md
+### Build ###
+/target/
+/build/
+/out/
+
+### Gradle ###
 .gradle
-build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### STS ###
-.apt_generated
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+
+### Eclipse / STS ###
 .classpath
-.factorypath
 .project
-.settings
+.settings/
+bin/
+.apt_generated
+.factorypath
 .springBeans
 .sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -36,20 +34,20 @@ out/
 
 ### VS Code ###
 .vscode/
-=======
-# Compiled class file
-*.class
 
-# Log file
+### Logs ###
 *.log
 
-# BlueJ files
-*.ctxt
+### OS files ###
+.DS_Store
+Thumbs.db
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+### Java ###
+*.class
+hs_err_pid*
+replay_pid*
 
-# Package Files #
+### Packages (빌드 아티팩트는 올릴 필요 없음) ###
 *.jar
 *.war
 *.nar
@@ -58,7 +56,6 @@ out/
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
->>>>>>> 7f7a59925738a5c9386ab38bc253437b99d82a73
+### Application configs (민감 정보 방지) ###
+application-*.yml
+application-*.properties
