@@ -1,4 +1,4 @@
-package com.manwon.happiness.user.exception;
+package com.manwon.happiness.member.exception;
 
 /**
  * 이메일 중복 시 발생하는 예외
