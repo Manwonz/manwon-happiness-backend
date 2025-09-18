@@ -31,26 +31,26 @@ public class MemberController {
      */
     @PostMapping("/signup")
     public ResponseEntity<MemberResponseDto> signUp(@Valid @RequestBody MemberSignupRequestDto requestDto) {
-        MemberResponseDto responseDto = memberService.registerUser(requestDto);
+        MemberResponseDto responseDto = memberService.registerMember(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     /**
      * ID로 회원 조회 API
-     * GET /api/v1/users/{id}
+     * GET /api/v1/members/{member_id}
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberResponseDto> getUserById(@PathVariable Long id) {
+    @GetMapping("/{member_id}")
+    public ResponseEntity<MemberResponseDto> getMemberById(@PathVariable("member_id") Long id) {
         return ResponseEntity.ok(memberService.findById(id));
     }
 
     /**
      * 이메일로 회원 조회 API
-     * GET /api/v1/users/email/{email}
+     * GET /api/v1/members/email/{email}
      */
     @GetMapping("/email/{email}")
-    public ResponseEntity<MemberResponseDto> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<MemberResponseDto> getMemberByEmail(@PathVariable String email) {
         return ResponseEntity.ok(memberService.findByEmail(email));
     }
 }

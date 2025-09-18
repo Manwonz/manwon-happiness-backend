@@ -24,7 +24,7 @@ public class MemberServiceImpl implements MemberService {
      * 회원가입
      */
     @Override
-    public MemberResponseDto registerUser(MemberSignupRequestDto requestDto) {
+    public MemberResponseDto registerMember(MemberSignupRequestDto requestDto) {
         // 이메일 중복 체크
         if (memberRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new DuplicateEmailException("이미 사용 중인 이메일입니다: " + requestDto.getEmail());
