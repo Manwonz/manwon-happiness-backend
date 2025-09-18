@@ -9,7 +9,7 @@ public interface MemberService {
      * @param requestDto 회원가입 요청 DTO
      * @return 저장된 사용자 응답 DTO
      */
-    MemberResponseDto registerUser(MemberSignupRequestDto requestDto);
+    MemberResponseDto registerMember(MemberSignupRequestDto requestDto);
 
     /**
      * 사용자 ID로 조회
