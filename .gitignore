@@ -57,5 +57,6 @@ replay_pid*
 *.rar
 
 ### Application configs (민감 정보 방지) ###
+application.yml
 application-*.yml
 application-*.properties
