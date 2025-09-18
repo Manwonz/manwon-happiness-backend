@@ -1,23 +1,23 @@
-package com.manwon.happiness.user.entity;
+package com.manwon.happiness.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-import static com.manwon.happiness.user.entity.Role.USER;
+import static com.manwon.happiness.member.entity.Role.MEMBER;
 
 @Entity
-@Table(name = "users")
+@Table(name = "members")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long memberId;
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
@@ -40,7 +40,7 @@ public class User {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        if (this.role == null) this.role = USER;
+        if (this.role == null) this.role = MEMBER;
     }
 
     public void changeNickname(String nickname) {

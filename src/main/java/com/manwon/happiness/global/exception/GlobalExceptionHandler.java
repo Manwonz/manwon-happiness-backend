@@ -1,7 +1,7 @@
 package com.manwon.happiness.global.exception;
 
-import com.manwon.happiness.user.exception.DuplicateEmailException;
-import com.manwon.happiness.user.exception.UserNotFoundException;
+import com.manwon.happiness.member.exception.DuplicateEmailException;
+import com.manwon.happiness.member.exception.MemberNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,8 +38,8 @@ public class GlobalExceptionHandler {
     }
 
     // 사용자 조회 실패 (404 Not Found)
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUserNotFound(UserNotFoundException ex) {
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUserNotFound(MemberNotFoundException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
 

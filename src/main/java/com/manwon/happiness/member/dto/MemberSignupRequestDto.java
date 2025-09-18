@@ -1,4 +1,4 @@
-package com.manwon.happiness.user.dto;
+package com.manwon.happiness.member.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserSignupRequestDto {
+public class MemberSignupRequestDto {
 
     @NotBlank(message = "이메일은 필수 입력값입니다.")
     @Email(message = "올바른 이메일 형식을 입력해주세요.")
