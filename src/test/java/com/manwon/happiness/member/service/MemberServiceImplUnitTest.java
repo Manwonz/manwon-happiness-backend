@@ -10,6 +10,7 @@ import com.manwon.happiness.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -22,21 +23,24 @@ class MemberServiceImplUnitTest {
 
     private MemberRepository memberRepository;
     private MemberServiceImpl memberService;
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
         memberRepository = mock(MemberRepository.class);
-        memberService = new MemberServiceImpl(memberRepository);
+        passwordEncoder = mock(PasswordEncoder.class);
+        memberService = new MemberServiceImpl(memberRepository, passwordEncoder);
     }
 
     @DisplayName("회원가입 성공 - 이메일 중복되지 않으면 이메일, 닉네임이 정상 저장")
     @Test
     void 회원가입_성공() {
         // given
-        MemberSignupRequestDto requestDto = new MemberSignupRequestDto();
-        requestDto.setEmail("test@test.com");
-        requestDto.setPassword("password123");
-        requestDto.setNickname("testUser");
+        MemberSignupRequestDto requestDto = MemberSignupRequestDto.builder()
+                .email("test@test.com")
+                .password("password123")
+                .nickname("testUser")
+                .build();
 
         Member saved = Member.builder()
                 .memberId(1L)
@@ -62,10 +66,11 @@ class MemberServiceImplUnitTest {
     @Test
     void 회원가입_이메일중복_예외() {
         // given
-        MemberSignupRequestDto requestDto = new MemberSignupRequestDto();
-        requestDto.setEmail("duplicate@test.com");
-        requestDto.setPassword("password123");
-        requestDto.setNickname("duplicateUser");
+        MemberSignupRequestDto requestDto = MemberSignupRequestDto.builder()
+                .email("duplicate@test.com")
+                .password("password123")
+                .nickname("duplicateUser")
+                .build();
 
         Member existingMember = Member.builder()
                 .memberId(2L)

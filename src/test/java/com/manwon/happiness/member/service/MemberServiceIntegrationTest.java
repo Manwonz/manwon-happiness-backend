@@ -26,10 +26,11 @@ class MemberServiceIntegrationTest {
     @Test
     void 회원가입_성공() {
         // given
-        MemberSignupRequestDto requestDto = new MemberSignupRequestDto();
-        requestDto.setEmail("test@test.com");
-        requestDto.setPassword("abcd1234");
-        requestDto.setNickname("tester");
+        MemberSignupRequestDto requestDto = MemberSignupRequestDto.builder()
+                .email("test@test.com")
+                .password("abcd1234")
+                .nickname("tester")
+                .build();
 
         // when
         MemberResponseDto response = memberService.registerMember(requestDto);
@@ -44,10 +45,11 @@ class MemberServiceIntegrationTest {
     @Test
     void 회원가입_이메일중복_예외() {
         // given
-        MemberSignupRequestDto requestDto = new MemberSignupRequestDto();
-        requestDto.setEmail("duplicate@test.com");
-        requestDto.setPassword("password123");
-        requestDto.setNickname("duplicate");
+        MemberSignupRequestDto requestDto = MemberSignupRequestDto.builder()
+                .email("duplicate@test.com")
+                .password("password123")
+                .nickname("duplicate")
+                .build();
 
         memberService.registerMember(requestDto);
 
@@ -61,10 +63,11 @@ class MemberServiceIntegrationTest {
     @Test
     void ID로_회원조회_성공() {
         // given
-        MemberSignupRequestDto requestDto = new MemberSignupRequestDto();
-        requestDto.setEmail("findId@test.com");
-        requestDto.setPassword("password1234");
-        requestDto.setNickname("idMember");
+        MemberSignupRequestDto requestDto = MemberSignupRequestDto.builder()
+                .email("findId@test.com")
+                .password("password1234")
+                .nickname("idMember")
+                .build();
 
         MemberResponseDto saved = memberService.registerMember(requestDto);
 
@@ -90,10 +93,11 @@ class MemberServiceIntegrationTest {
     @Test
     void 이메일로_회원조회_성공() {
         // given
-        MemberSignupRequestDto request = new MemberSignupRequestDto();
-        request.setEmail("email@test.com");
-        request.setPassword("password123");
-        request.setNickname("email123");
+        MemberSignupRequestDto request = MemberSignupRequestDto.builder()
+                .email("email@test.com")
+                .password("password123")
+                .nickname("email123")
+                .build();
 
         memberService.registerMember(request);
 

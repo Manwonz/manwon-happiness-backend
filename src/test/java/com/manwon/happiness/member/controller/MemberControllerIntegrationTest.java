@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -23,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MemberControllerTest {
+class MemberControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,6 +35,8 @@ class MemberControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
@@ -43,10 +47,11 @@ class MemberControllerTest {
     @DisplayName("회원가입 성공 - 올바른 요청이면 201 Created")
     void 회원가입_성공() throws Exception {
         // given
-        MemberSignupRequestDto requestDto = new MemberSignupRequestDto();
-        requestDto.setEmail("test1@test.com");
-        requestDto.setPassword("password123");
-        requestDto.setNickname("testUser1");
+        MemberSignupRequestDto requestDto = MemberSignupRequestDto.builder()
+                .email("test1@test.com")
+                .password("password123")
+                .nickname("testUser1")
+                .build();
 
         // when & then
         mockMvc.perform(post("/api/v1/members/signup") // 실제 Controller 매핑 URL 맞춰줘야 함
@@ -70,10 +75,11 @@ class MemberControllerTest {
                 .build();
         memberRepository.save(existing);
 
-        MemberSignupRequestDto requestDto = new MemberSignupRequestDto();
-        requestDto.setEmail("duplicate@test.com");
-        requestDto.setPassword("password456");
-        requestDto.setNickname("newUser");
+        MemberSignupRequestDto requestDto = MemberSignupRequestDto.builder()
+                .email("duplicate@test.com")
+                .password("password123")
+                .nickname("testUser1")
+                .build();
 
         // when & then
         mockMvc.perform(post("/api/v1/members/signup")
@@ -86,10 +92,11 @@ class MemberControllerTest {
     @DisplayName("회원가입 실패 - 유효성 검증 실패 400 Bad Request")
     void 회원가입_실패_유효성검증() throws Exception {
         // given (잘못된 입력값)
-        MemberSignupRequestDto requestDto = new MemberSignupRequestDto();
-        requestDto.setEmail("not-an-email"); // 잘못된 이메일 형식
-        requestDto.setPassword("123"); // 너무 짧은 비밀번호
-        requestDto.setNickname(""); // 빈 닉네임
+        MemberSignupRequestDto requestDto = MemberSignupRequestDto.builder()
+                .email("not-an-email") // 잘못된 이메일 형식
+                .password("123") // 너무 짧은 비밀번호
+                .nickname("") // 빈 닉네임
+                .build();
 
         // when & then
         mockMvc.perform(post("/api/v1/members/signup")
@@ -100,6 +107,7 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("회원 ID로 조회 성공 - 200 OK")
+    @WithMockUser(username = "findid@test.com", roles = "MEMBER")
     void ID로_회원조회_성공() throws Exception {
         // given
         Member member = Member.builder()
@@ -114,25 +122,29 @@ class MemberControllerTest {
         // when & then
         mockMvc.perform(get("/api/v1/members/{member_id}", saved.getMemberId()))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.member_id").value(saved.getMemberId()))
                 .andExpect(jsonPath("$.email").value("findid@test.com"))
                 .andExpect(jsonPath("$.nickname").value("findByIdUser"));
     }
 
     @DisplayName("회원 조회 실패 - 없는 ID 404 Not Found")
     @Test
+    @WithMockUser(username = "test@test.com", roles = "MEMBER")
     void 회원조회_실패_ID() throws Exception {
         // when & then
-        mockMvc.perform(get("/api/v1/members/{id}", 999L))
+        mockMvc.perform(get("/api/v1/members/{member_id}", 999L))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("회원 이메일로 조회 성공 - 200 OK")
+    @WithMockUser(username = "findemail@test.com", roles = "MEMBER")
     void 이메일로_회원조회_성공() throws Exception {
         // given
+        memberRepository.deleteAll();
         Member member = Member.builder()
                 .email("findemail@test.com")
-                .passwordHash("password123")
+                .passwordHash(passwordEncoder.encode("password123"))
                 .nickname("findByEmailUser")
                 .role(Role.MEMBER)
                 .createdAt(LocalDateTime.now())
@@ -148,6 +160,7 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("회원 조회 실패 - 없는 이메일 404 Not Found")
+    @WithMockUser(username = "findemail@test.com", roles = "MEMBER")
     void 회원조회_실패_이메일() throws Exception {
         // given
         String notExistEmail = "notfound@test.com";
