@@ -2,6 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
+	// 테스트 커버리지 리포트용 JaCoCo 플러그인
+	id 'jacoco'
 }
 
 group = 'com.manwon.happiness'
@@ -44,4 +46,17 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	// 테스트 끝나고 커버리지 리포트도 자동 생성
+	finalizedBy 'jacocoTestReport'
+}
+
+// JaCoCo 리포트 설정
+jacocoTestReport {
+	dependsOn test // test 실행 후 리포트 생성
+	reports {
+		xml.required = true    // CI/CD에서 활용 가능 (원하면 꺼도 됨)
+		csv.required = false
+		html.required = true   // 로컬에서 확인할 때 주로 씀
+		html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+	}
 }
