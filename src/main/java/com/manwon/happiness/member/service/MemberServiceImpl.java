@@ -5,8 +5,10 @@ import com.manwon.happiness.member.dto.MemberSignupRequestDto;
 import com.manwon.happiness.member.entity.Member;
 import com.manwon.happiness.member.entity.Role;
 import com.manwon.happiness.member.exception.DuplicateEmailException;
+import com.manwon.happiness.member.exception.DuplicateNicknameException;
 import com.manwon.happiness.member.exception.MemberNotFoundException;
 import com.manwon.happiness.member.repository.MemberRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder; // 세션 로그인 추가
 
-    public MemberServiceImpl(MemberRepository memberRepository) {
+    public MemberServiceImpl(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -30,13 +34,13 @@ public class MemberServiceImpl implements MemberService {
             throw new DuplicateEmailException("이미 사용 중인 이메일입니다: " + requestDto.getEmail());
         }
 
-        // DTO -> 엔티티 변환 (Builder 사용)
-        Member member = Member.builder()
-                .email(requestDto.getEmail())
-                .passwordHash(requestDto.getPassword()) // TODO: 비밀번호 암호화 필요
-                .nickname(requestDto.getNickname())
-                .role(Role.MEMBER)
-                .build();
+        // 닉네임 중복 체크
+        if (memberRepository.existsByNickname(requestDto.getNickname())) {
+            throw new DuplicateNicknameException("이미 사용 중인 닉네임입니다: " + requestDto.getNickname());
+        }
+
+        // DTO -> 엔티티 변환
+        Member member = requestDto.toEntity(passwordEncoder);
 
         // DB 저장
         Member savedMember = memberRepository.save(member);
