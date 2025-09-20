@@ -76,6 +76,32 @@ class AuthControllerIntegrationTest {
                 .andExpect(jsonPath("$.role").value("MEMBER"));
     }
 
+    @DisplayName("로그인 실패 - 잘못된 비밀번호")
+    @Test
+    void 로그인실패_비밀번호틀림() throws Exception {
+        // given
+        LoginRequestDto requestDto = new LoginRequestDto("test@test.com", "wrongpassword");
+
+        // when & then
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @DisplayName("로그인 실패 - 존재하지 않는 이메일")
+    @Test
+    void 로그인실패_이메일없음() throws Exception {
+        // given
+        LoginRequestDto requestDto = new LoginRequestDto("notexist@test.com", "password123");
+
+        // when & then
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isUnauthorized());
+    }
+
     @DisplayName("로그아웃 성공 시 세션 무효화")
     @Test
     void 로그아웃_성공() throws Exception {
