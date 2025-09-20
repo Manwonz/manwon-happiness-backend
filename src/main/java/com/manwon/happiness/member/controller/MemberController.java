@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * UserController
+ * MemberController
  * - 사용자 관련 API 엔드포인트 제공
  */
 @RestController
@@ -20,11 +20,12 @@ public class MemberController {
 
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
+
     }
 
     /**
      * 회원가입 API
-     * POST /api/v1/users/signup
+     * POST /api/v1/members/signup
      * 201 Created (성공)
      * 400 Bad Request (입력 오류) (@Valid 에서 자동 처리)
      * 409 Conflict (중복 이메일)

@@ -47,7 +47,7 @@ public class Member {
         this.nickname = nickname;
     }
 
-    public void updateLastLogin(LocalDateTime now) {
+    public void updateLastLoginAt(LocalDateTime now) {
         this.lastLoginAt = now;
     }
 }
