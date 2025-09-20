@@ -4,6 +4,8 @@ import com.manwon.happiness.member.exception.DuplicateEmailException;
 import com.manwon.happiness.member.exception.MemberNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -44,6 +46,20 @@ public class GlobalExceptionHandler {
         error.put("error", ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    // 인증 실패 (잘못된 아이디/비밀번호)
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "아이디 또는 비밀번호가 올바르지 않습니다."));
+    }
+
+    // 존재하지 않는 사용자
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUserNotFound(UsernameNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "회원이 존재하지 않습니다."));
     }
 
     // 그 외 모든 예외 (500 Internal Server Error)
