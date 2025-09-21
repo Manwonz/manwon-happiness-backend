@@ -9,30 +9,36 @@ import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final Member member;
+    private final Long memberId;
+    private final String email;
+    private final String nickname;
+    private final String role;
 
     public CustomUserDetails(Member member) {
-        this.member = member;
-    }
-
-    public Member getMember() {
-        return member;
+        this.memberId = member.getMemberId();
+        this.email = member.getEmail();
+        this.nickname = member.getNickname();
+        this.role = member.getRole().name();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 단일 Role을 GrantedAuthority로 변환
-        return List.of((GrantedAuthority) () -> "ROLE_" + member.getRole().name());
+        return List.of((GrantedAuthority) () -> "ROLE_" + role);
     }
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return email;
     }
 
     @Override
     public String getPassword() {
-        return member.getPasswordHash();
+        return null; // 세션에 비밀번호 저장 안함
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     @Override
