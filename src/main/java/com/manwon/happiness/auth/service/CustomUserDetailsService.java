@@ -3,7 +3,6 @@ package com.manwon.happiness.auth.service;
 import com.manwon.happiness.auth.model.CustomUserDetails;
 import com.manwon.happiness.member.entity.Member;
 import com.manwon.happiness.member.repository.MemberRepository;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
