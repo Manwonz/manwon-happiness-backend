@@ -47,6 +47,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    implementation "io.sentry:sentry-spring-boot-starter-jakarta:8.22.0"
+    implementation "io.sentry:sentry-logback:8.22.0"
 }
 
 tasks.named('test') {
@@ -66,13 +68,11 @@ jacocoTestReport {
 	}
 }
 
-def hasSentryToken = System.getenv("SENTRY_AUTH_TOKEN") != null
-
 sentry {
     // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
     // This enables source context, allowing you to see your source
     // code as part of your stack traces in Sentry.
-    includeSourceContext = hasSentryToken
+    includeSourceContext = true
 
     org = "manwonz"
     projectName = "manwonz"
