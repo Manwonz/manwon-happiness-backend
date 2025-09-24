@@ -1,9 +1,13 @@
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
 	// 테스트 커버리지 리포트용 JaCoCo 플러그인
 	id 'jacoco'
+
+    // sentry
+    id "io.sentry.jvm.gradle" version "5.12.0"
 }
 
 group = 'com.manwon.happiness'
@@ -42,6 +46,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 }
 
 tasks.named('test') {
@@ -59,4 +64,17 @@ jacocoTestReport {
 		html.required = true   // 로컬에서 확인할 때 주로 씀
 		html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
 	}
+}
+
+def hasSentryToken = System.getenv("SENTRY_AUTH_TOKEN") != null
+
+sentry {
+    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+    // This enables source context, allowing you to see your source
+    // code as part of your stack traces in Sentry.
+    includeSourceContext = hasSentryToken
+
+    org = "manwonz"
+    projectName = "manwonz"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
