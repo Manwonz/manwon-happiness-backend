@@ -26,8 +26,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/members/signup").permitAll() // 회원가입 허용
-                        .requestMatchers("/api/v1/auth/login").permitAll() // 회원가입 허용
+                        .requestMatchers("/api/v1/members/signup",  // 회원가입 허용
+                                        "/api/v1/auth/login",       // 로그인 허용
+                                        "/api/v1/places/**"         // 장소 관련 API 임시 허용
+                        ).permitAll()
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
 //                .formLogin(form -> form
